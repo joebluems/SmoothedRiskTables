@@ -1,5 +1,5 @@
 # SmoothedRiskTables
-Using Apache Drill to generate Smoothed Risk tables for assorted Loan Products
+Apache Drill Do-it-Yourself Workshop to generate Smoothed Risk tables for assorted Loan Products. The risk tables are useful for production recommendations, but also for creating inputs for predictive models that are less likely to overfit during training.
 
 ## Get Apache Drill
 Link for the download: http://drill.apache.org/download/ <BR>
@@ -26,14 +26,14 @@ Plugins - http://drill.apache.org/docs/storage-plugin-configuration/<BR>
 Workspaces - http://drill.apache.org/docs/workspaces/<BR>
 <BR>
 
-## Building Risk Tables for Loan Types
+## Build Risk Tables for Loan Types
 For this example, we are attempting to create a smoothed risk table for loan types based on whether or not a customer is a “good” account. The label of “good” could be based on proclivity against churn or an extra-profitable type of customer persona or segment.<BR>
 <BR>
 This data was simulated with the python script <b>data.py</b> to create the file <b>loanType.json</b>. Use your own data or simulate some new data with the script. Make sure you change the file location as needed to avoid a file-not-found error.<BR>
 
 All of the Drill queries and commands below should work as copy-paste. Tips:<BR>
 1)	Tick marks are important (make sure your system doesn’t convert to quotes)<BR>
-2)	When copying, don’t include the drill prompt (i.e. <b>0: jdbc:drill:> <b>)<BR>
+2)	When copying, don’t include the drill prompt (i.e. <b>0: jdbc:drill:> </b>)<BR>
 <BR>
 Explore the <b>loanType.json</b> file inside Drill:<BR>
 <BR>

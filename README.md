@@ -11,13 +11,13 @@ To write a risk table you need to create a schema in the dfs workspace. <BR>
 Open up a browser and go to http://localhost:8047/<BR>
 From the Storage menu, select Update for the dfs storage plugin.<BR> 
 Create a new schema called risk. On my Mac, it looks like this:<BR>
-<BR>
-"risk": {<BR>
-      "location": "/Users/joeblue/RiskTables/tables",<BR>
-      "writable": true,<BR>
-      "defaultInputFormat": null<BR>
-    }<BR>
-<BR>
+```
+"risk": {
+      "location": "/Users/joeblue/RiskTables/tables",
+      "writable": true,
+      "defaultInputFormat": null
+    }
+```
 You must create the folder <b>tables</b> in the location above to complete the workspace. When selecting Update, you should get a “success” message. <BR>
 If you already started Drill, exit the shell (i.e. <ctrl-D>) and restart it to be able to access the risk schema. <BR>
 <BR>

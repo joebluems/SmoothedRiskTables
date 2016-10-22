@@ -8,7 +8,7 @@ Launch drill from the main drill folder with this command: <b> ./bin/drill-embed
 <BR>
 ## Setup a workspace
 To write a risk table you need to create a schema in the dfs workspace. <BR>
-Open up a browser and go to http://localhost:8047<BR>
+Open up a browser and go to http://localhost:8047/<BR>
 From the Storage menu, select Update for the dfs storage plugin.<BR> 
 Create a new schema called risk. On my Mac, it looks like this:<BR>
 <BR>
@@ -18,7 +18,7 @@ Create a new schema called risk. On my Mac, it looks like this:<BR>
       "defaultInputFormat": null<BR>
     }<BR>
 <BR>
-You must create the folder tables in the location above to complete the workspace. When selecting Update, you should get a “success” message. <BR>
+You must create the folder <b>tables</b> in the location above to complete the workspace. When selecting Update, you should get a “success” message. <BR>
 If you already started Drill, exit the shell (i.e. <ctrl-D>) and restart it to be able to access the risk schema. <BR>
 <BR>
 The Drill Web Console is where you can connect Drill to a variety of other tools and further configure your workspaces. For more on topics, check out these links:<BR>
@@ -29,13 +29,13 @@ Workspaces - http://drill.apache.org/docs/workspaces/<BR>
 ## Building Risk Tables for Loan Types
 For this example, we are attempting to create a smoothed risk table for loan types based on whether or not a customer is a “good” account. The label of “good” could be based on proclivity against churn or an extra-profitable type of customer persona or segment.<BR>
 <BR>
-This data was simulated with the python script data.py to create the file loanType.json. Use your own data or simulate some new data with the script. Make sure you change the file location as needed to avoid a file-not-found error.<BR>
+This data was simulated with the python script <b>data.py</b> to create the file <b>loanType.json</b>. Use your own data or simulate some new data with the script. Make sure you change the file location as needed to avoid a file-not-found error.<BR>
 
 All of the Drill queries and commands below should work as copy-paste. Tips:<BR>
 1)	Tick marks are important (make sure your system doesn’t convert to quotes)<BR>
-2)	When copying, don’t include the drill prompt (i.e. 0: jdbc:drill:>)<BR>
+2)	When copying, don’t include the drill prompt (i.e. <b>0: jdbc:drill:> <b>)<BR>
 <BR>
-Explore the loanType.json file inside Drill:<BR>
+Explore the <b>loanType.json</b> file inside Drill:<BR>
 <BR>
 ```
 0: jdbc:drill:> select * from dfs.`/Users/joeblue/RiskTables/loanType.json` limit 5;
@@ -81,7 +81,7 @@ order by count(*) desc;
 | 11        | 7284   |
 +-----------+--------+
 ```
-Calculate the total number of “good” accounts and “other” accounts (over the entire population). This ratio tells us the mean good rate = numGood/(numGood + numOther).  The risks we calculate will be based on an increase from this rate (more likely to be good) vs. decreases (less likely to be good) for each loan type. The dummy field is for merging in the next query. <BR>
+Calculate the total number of “good” accounts and “other” accounts (over the entire population). This ratio tells us the mean good rate = numGood/(numGood + numOther).  The relative risks we calculate will be based on an increase from this rate (more likely to be good) vs. decrease (less likely to be good) for each loan type. The dummy field is for merging in the next query. <BR>
 ```
 0: jdbc:drill:zk=local> select 1 as `dummy`,sum(totalGood) `numGood`,sum(totalOther) `numOther` from (
 select case when good='1' then 1 else 0 end as `totalGood`,
@@ -190,11 +190,11 @@ order by loanType;
 ```
 Note: a neutral risk = 1.0.  If the risk is > 1.0, that implies the good rate is higher for customers who have that product. The converse is true for customers who have a loan type which has a risk below 1.0. <BR>
 <BR>
-This risk doesn’t take into account loans with a very small frequency and will be 0.0 when there are no goods in the categories. Smoothed risks remove these limitations. Calculate the smoothed risk for the loan types. <BR>
+This risk doesn’t take into account loans with a very small frequency and will be 0.0 when there are zero goods in the category. Smoothed risks remove these limitations. Calculate the <b>smoothed risk</b> for the loan types. <BR>
 <BR>
 The smoothing parameter controls the amount to which risks of small categories are pulled towards the neutral risk of 1.0. Experiment with the parameter to find the right level for your scenario. In the example below, smooth=50 is used.<BR>
 <BR>
-To write a table, we need to switch to the schema you created previously. Or you can specify the workspace and schema in the query. To set the risk as the default schema, use this command:<BR>
+To write a table, we need to switch to the "risk" schema you created previously. Or you can specify the workspace and schema in the query. To set the risk as the default schema, use this command:<BR>
 ```
 0: jdbc:drill:zk=local> use dfs.risk;
 +-------+---------------------------------------+
@@ -274,7 +274,7 @@ limit 10;
 | 1     | 4         | 1     | -0.29130153046917123  |
 +-------+-----------+-------+-----------------------+
 ```
-The sum of the log Risk for each account is the cumulative risk. Calculate and show the accounts with the highest and lowest cumulative loan type risks.<BR>
+The sum of the ln(Risk) for each account's loans is the cumulative risk. Calculate and show the accounts with the highest and lowest cumulative loan type risks.<BR>
 ```
 0: jdbc:drill:zk=local> select acct,sum(logRisk) `cumulativeRisk` from(
 select A.*,log(B.smoothedRisk) `logRisk` from
@@ -330,7 +330,7 @@ limit 10;
 ```
 The risk table could be used to identify recommended products or the cumulative log(risk) could be used as an input to a predictive model. <BR>
 <BR>
-To make this lengthy query easier to work with, you could create a Drill UDF that contained the calculation and allowed the user ability to specify the smooth parameter. For more info on UDF’s check out this link:<BR>
+To make this lengthy query easier to work with, you could create a <b>Drill UDF</b> that contains the calculation and allows the user to specify the smooth parameter. For more info on UDF’s check out this link:<BR>
 http://drill.apache.org/docs/adding-custom-functions-to-drill/ <BR>
 
 
